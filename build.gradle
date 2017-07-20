@@ -1,0 +1,61 @@
+//example tasks
+task hello << {
+	println 'Hello world.'
+}
+
+task lib1 << {
+	description 'Example of lib1.'
+	println 'lib1'
+}
+
+task lib2 << {
+	println 'lib2'
+}
+
+task lib3 << {
+	println 'lib3'
+}
+
+task upper << {
+	String expString = "Some text."
+	println "Original: '" + expString + "'"
+	println "Upper case: '" + expString.toUpperCase() + "'"
+}
+
+task count << {
+	4.times {
+		print "$it "
+	}
+}
+
+task stringEach << {
+	String expString = "Some text."
+	expString.each() {
+		println "$it"
+	}
+}
+
+task printInfo << {
+	println "Build dir is '" + project.buildDir + "'."
+}
+
+task doAll(dependsOn: ['printInfo','count']) << {
+	println "Done."
+}
+
+task doLibs << {
+	println "DoLibs is done."
+}
+
+doLibs.dependsOn {
+	tasks.findAll {
+		task -> task.name.startsWith('lib')
+	}
+}
+
+task exception << {
+	throw new StopExecutionException()
+}
+
+count.dependsOn upper
+doLibs.dependsOn exception
